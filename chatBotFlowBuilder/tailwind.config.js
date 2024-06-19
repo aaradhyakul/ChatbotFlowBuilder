@@ -11,6 +11,9 @@ export default {
         "bg-sidebar-4": "#EEF7FF",
         "bg-sidebar-5": "#7AB2B2",
       },
+      fontSize: {
+        mini: "0.4rem",
+      },
     },
   },
   plugins: [],

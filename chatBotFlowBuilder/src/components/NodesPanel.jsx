@@ -1,9 +1,20 @@
 import React from "react";
 
 function NodesPanel() {
+  const onDragStart = (e, nodeType) => {
+    e.dataTransfer.setData("nodetype", nodeType);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
   return (
     <div className="flex flex-wrap gap-2 p-2 ">
-      <div className="flex-auto w-[100px] bg-[#CDE8E5] h-[80px] rounded-md overflow-hidden duration-150 hover:scale-105">
+      <div
+        className="flex-auto w-[100px] bg-[#CDE8E5] h-[80px] rounded-md overflow-hidden duration-150 hover:scale-105"
+        draggable
+        // onDragStart={dragStart}
+        onDragStart={(e) => onDragStart(e, "customTextNode")}
+        // onDragEnd={dragEnd}
+      >
         <button className="w-full h-full  p-1 active:bg-[#7AB2B2]">
           Message Node
         </button>

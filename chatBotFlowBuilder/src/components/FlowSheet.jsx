@@ -1,12 +1,15 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo, useState, useRef } from "react";
 import ReactFlow, {
   useNodesState,
   useEdgesState,
   addEdge,
   Controls,
+  useOnViewportChange,
+  useReactFlow,
 } from "reactflow";
 import useStore from "@/stores/store";
-import { useShallow } from "zustand/react/shallow";
+import TextNode from "@/customNodes/TextNode";
+// import "@/customNodes/textNode.css";
 
 // const initialNodes = [
 //   {
@@ -35,34 +38,76 @@ const storeSelector = (store) => ({
   onNodesChange: store.onNodesChange,
   onEdgesChange: store.onEdgesChange,
   onConnect: store.onConnect,
+  setNodes: store.setNodes,
 });
+const id_map = new Map();
+const getId = (nodeType) => {
+  if (!id_map.has(nodeType)) {
+    id_map.set(nodeType, 1);
+  }
+  const id_no = id_map.get(nodeType);
+  const id = `${nodeType}_${id_no}`;
+  id_map.set(nodeType, id_no + 1);
+  return id;
+};
 
 function FlowSheet() {
-  const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useStore(
-    storeSelector
-    // useShallow(storeSelector)
-  );
-  const addNode = () => {
-    setNodes((nds) => {
-      return [
-        ...nds,
-        {
-          id: "provider-6",
-          data: { label: "node 6" },
-          position: { x: 500, y: 50 },
-        },
-      ];
+  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, setNodes } =
+    useStore(
+      storeSelector
+      // useShallow(storeSelector)
+    );
+  const addNode = (node) => {
+    setNodes([...nodes, node]);
+  };
+  const nodeTypes = useMemo(() => {
+    return {
+      customTextNode: TextNode,
+    };
+  }, []);
+  const flowSheetWrapperRef = useRef(null);
+  const reactFlowInstance = useReactFlow();
+  const onLoad = (_reactFlowInstance) => {
+    setReactFlowInstance(_reactFlowInstance);
+  };
+  const onDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  };
+  const onDrop = (e) => {
+    e.preventDefault();
+    const bounds = flowSheetWrapperRef.current.getBoundingClientRect();
+    const nodeType = e.dataTransfer.getData("nodetype");
+    console.log(e.target);
+    const position = reactFlowInstance.screenToFlowPosition({
+      x: e.clientX,
+      y: e.clientY,
     });
+    position.x -= 80;
+    position.y -= 22;
+    const newNode = {
+      id: getId(nodeType),
+      type: nodeType,
+      position,
+    };
+    addNode(newNode);
   };
   return (
-    <div className="flowsheet-wrapper w-full h-[800px]">
+    <div
+      className="flowsheet-wrapper w-screen h-screen"
+      ref={flowSheetWrapperRef}
+    >
       <button onClick={addNode}>add Node</button>
       <ReactFlow
         nodes={nodes}
+        nodeTypes={nodeTypes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onLoad={onLoad}
+        onDragOver={onDragOver}
+        onDrop={onDrop}
         fitView
       ></ReactFlow>
     </div>
