@@ -24,7 +24,7 @@ function SettingsPanel() {
   }, [selectedNodes]);
   useEffect(() => {}, [selectedNodes]);
 
-  return <div className="flex flex-col p-2 gap-1 ">{editorList}</div>;
+  return <div className="flex flex-col p-2 gap-2 ">{editorList}</div>;
 }
 
 export default SettingsPanel;

@@ -7,27 +7,22 @@ import React, {
   useContext,
 } from "react";
 import { Handle, Position } from "reactflow";
-import "@/customNodes/TextNode.css";
 import { NodeContext } from "@/contextProviders/NodeContextProvider";
+import SingleSourceHandle from "@/customHandles/SingleSourceHandle";
 
 const nodeUnselectedStyle = "border-2 border-black";
 const nodeSelectedStyle = "border-2 border-black";
 
 function TextNode({ data, id }) {
-  const { selectedNodes, setSelectedNodes, nodesData } =
+  const { selectedNodes, setSelectedNodes, nodesData, tempData } =
     useContext(NodeContext);
-
+  const [overlayCSS, setOverlayCSS] = useState("invisible");
+  const [overlayPosCSS, setOverlayPosCSS] = useState("invisible");
   useEffect(() => {
-    console.log(selectedNodes);
-  }, [selectedNodes]);
-  // useEffect(() => {
-  //   nodesData.set(id, {});
-  // }, []);
-  const nodeClassName = useMemo(() => {
     if (selectedNodes.has(id)) {
-      return "nodeSelected";
+      setOverlayCSS("");
     } else {
-      return "nodeUnselected";
+      setOverlayCSS("invisible");
     }
   }, [selectedNodes]);
   useEffect(() => {
@@ -35,12 +30,18 @@ function TextNode({ data, id }) {
   }, [nodesData]);
 
   const nodeClickHandler = () => {
-    if (selectedNodes.has(id)) {
-      setSelectedNodes((nds) => {
-        nds.delete(id);
-        return new Map(nds);
-      });
-    } else {
+    // if (selectedNodes.has(id)) {
+    //   setSelectedNodes((nds) => {
+    //     nds.delete(id);
+    //     return new Map(nds);
+    //   });
+    // } else {
+    //   setSelectedNodes((nds) => {
+    //     nds.set(id, "customTextNode");
+    //     return new Map(nds);
+    //   });
+    // }
+    if (!selectedNodes.has(id)) {
       setSelectedNodes((nds) => {
         nds.set(id, "customTextNode");
         return new Map(nds);
@@ -50,10 +51,18 @@ function TextNode({ data, id }) {
   return (
     <>
       <div
-        className={`${nodeClassName} flex flex-col w-40 min-h-11 text-mini  rounded-md overflow-hidden shadow-[1px_1px_3px_0px_#343434]`}
+        className={`relative flex flex-col w-[160px] h-[65px] text-mini  rounded-md overflow-hidden shadow-[1px_1px_3px_0px_#343434]`}
         onClick={nodeClickHandler}
       >
-        <div className="bg-[#97FEED] flex-initial p-1">Send Message</div>
+        {/* <div
+          className={`${overlayCSS} absolute w-full h-full bg-[#343434] opacity-5 -z-1 `}
+        ></div> */}
+        <div
+          className={`${overlayCSS} absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xl font-bold`}
+        >
+          {tempData.get(id)?.pos || 1}
+        </div>
+        <div className="bg-[#97FEED] flex-initial p-1 ">Send Message</div>
         <textarea
           readOnly
           value={nodesData.get(id)?.text}
@@ -61,7 +70,7 @@ function TextNode({ data, id }) {
         ></textarea>
       </div>
       <Handle type="target" position={Position.Left} />
-      <Handle type="source" position={Position.Right} />
+      <SingleSourceHandle position={Position.Right} />
     </>
   );
 }
