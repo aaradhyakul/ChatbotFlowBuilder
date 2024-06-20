@@ -14,26 +14,37 @@ const nodeUnselectedStyle = "border-2 border-black";
 const nodeSelectedStyle = "border-2 border-black";
 
 function TextNode({ data, id }) {
-  const { nodeClassState, dispatch } = useContext(NodeContext);
+  const { selectedNodes, setSelectedNodes } = useContext(NodeContext);
+
   useEffect(() => {
-    dispatch({ node_id: id, value: "nodeUnselected" });
-  }, []);
-  // const nodeClassName = useMemo(
-  //   () => nodeClassState[id] || "nodeUnselected",
-  //   [nodeClassState[id]]
-  // );
-  const nodeClickHandler = () => {
-    if (nodeClassState[id] == "nodeSelected") {
-      dispatch({ node_id: id, value: "nodeUnselected", type: "updateClass" });
+    console.log(selectedNodes);
+  }, [selectedNodes]);
+  const nodeClassName = useMemo(() => {
+    if (selectedNodes.has(id)) {
+      return "nodeSelected";
     } else {
-      dispatch({ node_id: id, value: "nodeSelected", type: "updateClass" });
+      return "nodeUnselected";
+    }
+  }, [selectedNodes]);
+
+  const nodeClickHandler = () => {
+    if (selectedNodes.has(id)) {
+      setSelectedNodes((nds) => {
+        nds.delete(id);
+        return new Set(nds);
+      });
+    } else {
+      setSelectedNodes((nds) => {
+        nds.add(id);
+        return new Set(nds);
+      });
     }
   };
 
   return (
     <>
       <div
-        className={`${nodeClassState[id]} flex flex-col w-40 min-h-11 text-mini  rounded-md overflow-hidden`}
+        className={`${nodeClassName} flex flex-col w-40 min-h-11 text-mini  rounded-md overflow-hidden`}
         onClick={nodeClickHandler}
       >
         <div className="bg-[#97FEED] flex-initial p-1">Send Message</div>

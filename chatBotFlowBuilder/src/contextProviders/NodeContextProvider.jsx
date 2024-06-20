@@ -1,21 +1,13 @@
-import React, { createContext, useReducer } from "react";
+import React, { createContext, useReducer, useState } from "react";
 
 export const NodeContext = createContext(null);
 
-const reducer = (state, action) => {
-  const node_id = action.node_id;
-  const val = action.value;
-  return {
-    ...state,
-    [node_id]: val,
-  };
-};
-
 const NodeContextProvider = ({ children }) => {
-  const [nodeClassState, dispatch] = useReducer(reducer, {});
-
+  const [selectedNodes, setSelectedNodes] = useState(new Set());
   return (
-    <NodeContext.Provider value={{ nodeClassState, dispatch }}>
+    <NodeContext.Provider
+      value={{ nodeClassState, dispatch, selectedNodes, setSelectedNodes }}
+    >
       {children}
     </NodeContext.Provider>
   );
