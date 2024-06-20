@@ -1,0 +1,6 @@
+.nodeSelected {
+  border: 3px solid red;
+}
+.nodeUnselected {
+  border: 3px solid green;
+}
