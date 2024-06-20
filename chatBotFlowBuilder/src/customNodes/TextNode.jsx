@@ -9,6 +9,7 @@ import React, {
 import { Handle, Position } from "reactflow";
 import { NodeContext } from "@/contextProviders/NodeContextProvider";
 import SingleSourceHandle from "@/customHandles/SingleSourceHandle";
+import MultiTargetNonZeroHandle from "@/customHandles/MultiTargetNonZeroHandle";
 
 const nodeUnselectedStyle = "border-2 border-black";
 const nodeSelectedStyle = "border-2 border-black";
@@ -51,7 +52,7 @@ function TextNode({ data, id }) {
   return (
     <>
       <div
-        className={`relative flex flex-col w-[160px] h-[65px] text-mini  rounded-md overflow-hidden shadow-[1px_1px_3px_0px_#343434]`}
+        className={`relative flex flex-col w-[160px] h-[65px] text-[7px]  rounded-md overflow-hidden shadow-[1px_1px_3px_0px_#343434]`}
         onClick={nodeClickHandler}
       >
         {/* <div
@@ -62,14 +63,17 @@ function TextNode({ data, id }) {
         >
           {tempData.get(id)?.pos || 1}
         </div>
-        <div className="bg-[#97FEED] flex-initial p-1 ">Send Message</div>
+        <div className="bg-[#97FEED] flex-initial p-1 font-semibold">
+          Send Message
+        </div>
         <textarea
           readOnly
           value={nodesData.get(id)?.text}
-          className="bg-[#F3F8FF] w-full  flex-auto p-1 cursor-pointer"
+          className="bg-[#F3F8FF] w-full  flex-auto p-1 cursor-pointer text-[10px] font-medium"
         ></textarea>
       </div>
       <Handle type="target" position={Position.Left} />
+      {/* <MultiTargetNonZeroHandle position={Position.Left} /> */}
       <SingleSourceHandle position={Position.Right} />
     </>
   );

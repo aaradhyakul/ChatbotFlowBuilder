@@ -1,5 +1,12 @@
 import { create } from "zustand";
-import { addEdge, applyEdgeChanges, applyNodeChanges } from "reactflow";
+import {
+  MarkerType,
+  addEdge,
+  applyEdgeChanges,
+  applyNodeChanges,
+} from "reactflow";
+// const initialNodes = [];
+// const initialEdges = [];
 const initialNodes = [
   {
     id: "provider-1",
@@ -20,16 +27,20 @@ const initialNodes = [
 const initialEdges = [
   {
     id: "provider-e1-2",
+    type: "unidirectionalEdge",
+    markerEnd: { type: MarkerType.ArrowClosed },
     source: "provider-1",
     target: "provider-2",
-    animated: true,
+    // animated: true,
   },
   { id: "provider-e1-3", source: "provider-1", target: "provider-3" },
 ];
+//EDGE IS NOT RECONNECTING AFTER CLICKING ON CROSS ????
 
 const store = (set, get) => ({
   nodes: initialNodes,
   edges: initialEdges,
+
   onNodesChange: (changes) => {
     set({ nodes: applyNodeChanges(changes, get().nodes) });
   },
@@ -37,7 +48,13 @@ const store = (set, get) => ({
     set({ edges: applyEdgeChanges(changes, get().edges) });
   },
   onConnect: (connection) => {
-    set({ edges: addEdge(connection, get().edges) });
+    const edge = {
+      ...connection,
+      type: "unidirectionalEdge",
+      markerEnd: { type: MarkerType.ArrowClosed },
+    };
+    set({ edges: addEdge(edge, get().edges) });
+    console.log(connection);
   },
   setNodes: (nodes) => {
     set({ nodes });

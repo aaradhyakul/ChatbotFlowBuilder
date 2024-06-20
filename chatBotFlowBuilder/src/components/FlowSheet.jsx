@@ -6,9 +6,11 @@ import ReactFlow, {
   Controls,
   useOnViewportChange,
   useReactFlow,
+  MiniMap,
 } from "reactflow";
 import useStore from "@/stores/store";
 import TextNode from "@/customNodes/TextNode";
+import UnidirectionalEdge from "../customEdges/UnidirectionalEdge";
 // import "@/customNodes/textNode.css";
 
 // const initialNodes = [
@@ -65,6 +67,11 @@ function FlowSheet() {
       customTextNode: TextNode,
     };
   }, []);
+  const edgeTypes = useMemo(() => {
+    return {
+      unidirectionalEdge: UnidirectionalEdge,
+    };
+  }, []);
   const flowSheetWrapperRef = useRef(null);
   const reactFlowInstance = useReactFlow();
   const onLoad = (_reactFlowInstance) => {
@@ -101,6 +108,7 @@ function FlowSheet() {
       <ReactFlow
         nodes={nodes}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
@@ -109,7 +117,10 @@ function FlowSheet() {
         onDragOver={onDragOver}
         onDrop={onDrop}
         fitView
-      ></ReactFlow>
+      >
+        <Controls />
+        <MiniMap nodeStrokeWidth={3} />
+      </ReactFlow>
     </div>
   );
 }

@@ -15,8 +15,8 @@ function SidePanel() {
   }, [selectedNodes]);
   const colors = ["#151515"];
   return (
-    <div className="absolute top-0 right-0 min-h-full w-[300px] bg-[#343434] shadow-[-1px_0px_1px_0px_#343434]">
-      <div className="font-bold flex justify-center pt-1 mt-1 text-white">
+    <div className="sidePanel h-screen overflow-scroll w-[300px] bg-[#343434] shadow-[-1px_0px_1px_0px_#343434]">
+      <div className=" font-bold flex justify-center pt-1 mt-1 text-white">
         {isNodesPanel ? "NODES" : "EDITOR"}
       </div>
       {isNodesPanel ? <NodesPanel /> : <SettingsPanel />}
