@@ -78,7 +78,6 @@ function FlowSheet() {
     e.preventDefault();
     const bounds = flowSheetWrapperRef.current.getBoundingClientRect();
     const nodeType = e.dataTransfer.getData("nodetype");
-    console.log(e.target);
     const position = reactFlowInstance.screenToFlowPosition({
       x: e.clientX,
       y: e.clientY,
@@ -92,12 +91,13 @@ function FlowSheet() {
     };
     addNode(newNode);
   };
+  const flowsheetClickHandler = () => {};
   return (
     <div
       className="flowsheet-wrapper w-screen h-screen"
       ref={flowSheetWrapperRef}
+      onClick={flowsheetClickHandler}
     >
-      <button onClick={addNode}>add Node</button>
       <ReactFlow
         nodes={nodes}
         nodeTypes={nodeTypes}

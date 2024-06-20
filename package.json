@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "immer": "^10.1.1",
+    "react-debounce-input": "^3.3.0",
     "zustand": "^4.5.2"
   }
 }

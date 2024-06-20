@@ -9,7 +9,6 @@ import NodeContextProvider from "@/contextProviders/NodeContextProvider";
 function App() {
   return (
     <div className="h-full text-md">
-      <div className="h-7 bg-slate-100"></div>
       <NodeContextProvider>
         <ReactFlowProvider>
           <FlowSheet />
