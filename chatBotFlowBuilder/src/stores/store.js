@@ -85,7 +85,6 @@ const store = (set, get) => ({
   },
   onConnect: (connection) => {
     connectionHandler(connection, set, get);
-    // console.log("Connection", connection);
   },
   setNodes: (nodes) => {
     set({ nodes });

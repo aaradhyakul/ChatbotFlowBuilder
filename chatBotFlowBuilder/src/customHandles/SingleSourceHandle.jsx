@@ -1,6 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
-import { Handle, Position } from "reactflow";
-import { HandleContext } from "@/contextProviders/HandleContextProvider";
+import { Handle } from "reactflow";
 import useStore from "@/stores/store";
 
 const storeSelector = (store) => ({

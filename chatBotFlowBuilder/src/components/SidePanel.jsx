@@ -13,7 +13,6 @@ function SidePanel() {
       setIsNodesPanel(false);
     }
   }, [selectedNodes]);
-  const colors = ["#151515"];
   return (
     <div className="sidePanel h-screen overflow-scroll w-[300px] bg-[#343434] shadow-[-1px_0px_1px_0px_#343434]">
       <div className=" font-bold flex justify-center pt-1 mt-1 text-white">

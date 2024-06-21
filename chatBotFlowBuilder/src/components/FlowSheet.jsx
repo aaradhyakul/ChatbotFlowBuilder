@@ -4,6 +4,7 @@ import React, {
   useState,
   useRef,
   useEffect,
+  useContext,
 } from "react";
 import ReactFlow, {
   useNodesState,
@@ -17,6 +18,7 @@ import ReactFlow, {
 import useStore from "@/stores/store";
 import TextNode from "@/customNodes/TextNode";
 import UnidirectionalEdge from "../customEdges/UnidirectionalEdge";
+import { NodeContext } from "../contextProviders/NodeContextProvider";
 // import "@/customNodes/textNode.css";
 
 // const initialNodes = [
@@ -114,8 +116,10 @@ function FlowSheet() {
   const saveFlowHandler = () => {
     localStorage.setItem("flowsheet_nodes", JSON.stringify(nodes));
     localStorage.setItem("flowsheet_edges", JSON.stringify(edges));
-    localStorage.setItem("hello", { hello: "hit" });
-    console.log("hello");
+    localStorage.setItem(
+      "flowsheet_nodes_data",
+      JSON.stringify(Array.from(nodesData.entries()))
+    );
   };
   const loadFlowHandler = () => {
     const localStorageNodes = JSON.parse(
@@ -124,10 +128,15 @@ function FlowSheet() {
     const localStorageEdges = JSON.parse(
       localStorage.getItem("flowsheet_edges")
     );
+    const localStorageNodesData = JSON.parse(
+      localStorage.getItem("flowsheet_nodes_data")
+    );
+    setNodesData(new Map(localStorageNodesData));
     if (localStorageNodes && localStorageEdges) {
       buildFromNodesAndEdges(localStorageNodes, localStorageEdges);
     }
   };
+  const { nodesData, setNodesData } = useContext(NodeContext);
   const [notificationCSS, setNotificationCSS] = useState("-translate-y-[110%]");
   const [notificationText, setNotificationText] = useState(
     "Saved to LocalStorage"
