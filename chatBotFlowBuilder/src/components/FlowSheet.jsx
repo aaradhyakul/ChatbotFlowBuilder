@@ -1,4 +1,10 @@
-import React, { useCallback, useMemo, useState, useRef } from "react";
+import React, {
+  useCallback,
+  useMemo,
+  useState,
+  useRef,
+  useEffect,
+} from "react";
 import ReactFlow, {
   useNodesState,
   useEdgesState,
@@ -41,6 +47,8 @@ const storeSelector = (store) => ({
   onEdgesChange: store.onEdgesChange,
   onConnect: store.onConnect,
   setNodes: store.setNodes,
+  setEdges: store.setEdges,
+  buildFromNodesAndEdges: store.buildFromNodesAndEdges,
 });
 const id_map = new Map();
 const getId = (nodeType) => {
@@ -54,6 +62,17 @@ const getId = (nodeType) => {
 };
 
 function FlowSheet() {
+  useEffect(() => {
+    const localStorageNodes = JSON.parse(
+      localStorage.getItem("flowsheet_nodes")
+    );
+    const localStorageEdges = JSON.parse(
+      localStorage.getItem("flowsheet_edges")
+    );
+    if (localStorageNodes && localStorageEdges) {
+      buildFromNodesAndEdges(localStorageNodes, localStorageEdges);
+    }
+  }, []);
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, setNodes } =
     useStore(
       storeSelector
@@ -98,30 +117,51 @@ function FlowSheet() {
     };
     addNode(newNode);
   };
-  const flowsheetClickHandler = () => {};
+  const saveFlowHandler = () => {
+    localStorage.setItem("flowsheet_nodes", JSON.stringify(nodes));
+    localStorage.setItem("flowsheet_edges", JSON.stringify(edges));
+    localStorage.setItem("hello", { hello: "hit" });
+    console.log("hello");
+  };
+  const [notificationCSS, setNotificationCSS] = useState("-translate-y-[110%]");
+  const [notificationText, setNotificationText] = useState(
+    "Saved to LocalStorage"
+  );
   return (
-    <div
-      className="flowsheet-wrapper w-screen h-screen"
-      ref={flowSheetWrapperRef}
-      onClick={flowsheetClickHandler}
-    >
-      <ReactFlow
-        nodes={nodes}
-        nodeTypes={nodeTypes}
-        edgeTypes={edgeTypes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        onLoad={onLoad}
-        onDragOver={onDragOver}
-        onDrop={onDrop}
-        fitView
+    <>
+      <button
+        className=" fixed top-[15px] left-[20px] bg-[#77DD77] py-1 px-2  rounded-sm font-semibold"
+        onClick={saveFlowHandler}
       >
-        <Controls />
-        <MiniMap nodeStrokeWidth={3} />
-      </ReactFlow>
-    </div>
+        Save Flow
+      </button>
+      <div
+        className="flowsheet-wrapper relative w-screen h-screen"
+        ref={flowSheetWrapperRef}
+      >
+        <div
+          className={`${notificationCSS} h-[50px] w-[100px] left-1/2 -translate-x-1/2 absolute bg-[#343434]`}
+        >
+          {notificationText}
+        </div>
+        <ReactFlow
+          nodes={nodes}
+          nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onLoad={onLoad}
+          onDragOver={onDragOver}
+          onDrop={onDrop}
+          fitView
+        >
+          <Controls />
+          <MiniMap nodeStrokeWidth={3} />
+        </ReactFlow>
+      </div>
+    </>
   );
 }
 

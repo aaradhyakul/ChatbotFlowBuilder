@@ -6,7 +6,13 @@ import store from "../stores/store";
 
 const storeSelector = (store) => ({
   edges: store.edges,
+  sourceHandles: store.sourceHandles,
+  targetHandles: store.targetHandles,
+  edgeHandleMap: store.edgeHandleMap,
   setEdges: store.setEdges,
+  setEdgeHandleMap: store.setEdgeHandleMap,
+  setSourceHandles: store.setSourceHandles,
+  setTargetHandles: store.setTargetHandles,
 });
 const UnidirectionalEdge = ({
   id,
@@ -19,7 +25,16 @@ const UnidirectionalEdge = ({
   style = {},
   markerEnd,
 }) => {
-  const { edges, setEdges } = useStore(storeSelector);
+  const {
+    edges,
+    sourceHandles,
+    targetHandles,
+    edgeHandleMap,
+    setEdges,
+    setSourceHandles,
+    setTargetHandles,
+    setEdgeHandleMap,
+  } = useStore(storeSelector);
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
@@ -29,6 +44,15 @@ const UnidirectionalEdge = ({
     targetPosition,
   });
   const onEdgeClick = () => {
+    const ids = edgeHandleMap.get(id);
+    const sourceId = ids[0];
+    const targetId = ids[1];
+    sourceHandles.set(sourceId, sourceHandles.get(sourceId) - 1);
+    targetHandles.set(targetId, targetHandles.get(targetId) - 1);
+    edgeHandleMap.delete(id);
+    setSourceHandles(new Map(sourceHandles));
+    setTargetHandles(new Map(targetHandles));
+    setEdgeHandleMap(new Map(edgeHandleMap));
     setEdges(edges.filter((edge) => edge.id !== id));
   };
   return (

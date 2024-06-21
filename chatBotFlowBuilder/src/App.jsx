@@ -8,6 +8,12 @@ import NodeContextProvider from "@/contextProviders/NodeContextProvider";
 import HandleContextProvider from "@/contextProviders/HandleContextProvider";
 
 function App() {
+  const saveFlowHandler = () => {
+    localStorage.setItem("flowsheet_nodes", JSON.stringify(nodes));
+    localStorage.setItem("flowsheet_edges", JSON.stringify(edges));
+    localStorage.setItem("hello", { hello: "hit" });
+    console.log("hello");
+  };
   return (
     <div className="h-full text-md flex">
       <HandleContextProvider>

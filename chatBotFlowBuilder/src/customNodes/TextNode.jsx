@@ -27,7 +27,7 @@ function TextNode({ data, id }) {
     }
   }, [selectedNodes]);
   useEffect(() => {
-    console.log("NODES DATA ", nodesData);
+    // console.log("NODES DATA ", nodesData);
   }, [nodesData]);
 
   const nodeClickHandler = () => {
@@ -74,7 +74,7 @@ function TextNode({ data, id }) {
       </div>
       <Handle type="target" position={Position.Left} />
       {/* <MultiTargetNonZeroHandle position={Position.Left} /> */}
-      <SingleSourceHandle position={Position.Right} />
+      <SingleSourceHandle position={Position.Right} node_id={id} />
     </>
   );
 }

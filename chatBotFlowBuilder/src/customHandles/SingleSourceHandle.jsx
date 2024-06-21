@@ -1,20 +1,24 @@
-import { useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Handle, Position } from "reactflow";
+import { HandleContext } from "@/contextProviders/HandleContextProvider";
+import useStore from "@/stores/store";
 
-const SingleSourceHandle = ({ position }) => {
-  const [sourceCount, setSourceCount] = useState(0);
-  const validConnectionCheck = () => {
-    if (sourceCount === 0) {
-      setSourceCount((sc) => sc + 1);
-      return true;
+const storeSelector = (store) => ({
+  sourceHandles: store.sourceHandles,
+});
+const SingleSourceHandle = ({ position, node_id }) => {
+  const { sourceHandles } = useStore(storeSelector);
+  const checkValidConnection = () => {
+    if ((sourceHandles.get(node_id) || 0) > 0) {
+      return false;
     }
-    return false;
+    return true;
   };
   return (
     <Handle
       type="source"
       position={position}
-      isValidConnection={validConnectionCheck}
+      isValidConnection={checkValidConnection}
     />
   );
 };
