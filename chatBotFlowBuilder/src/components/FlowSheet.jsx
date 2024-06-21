@@ -57,7 +57,8 @@ function FlowSheet() {
   } = useStore(storeSelector);
 
   const { setAlertsState } = useContext(AlertsContext);
-  const { nodesData, setNodesData, nodesCount } = useContext(NodeContext);
+  const { nodesData, setNodesData, nodesCount, setSelectedNodes } =
+    useContext(NodeContext);
   const addNode = (node) => {
     setNodes([...nodes, node]);
   };
@@ -99,12 +100,9 @@ function FlowSheet() {
   };
   const saveFlowHandler = () => {
     let connectionCount = 0;
-    console.log(sourceHandles);
     for (let [key, cnt] of sourceHandles) {
       connectionCount += cnt;
     }
-    console.log("CONNECTIONS:", connectionCount);
-    console.log("NODES:", nodesCount);
 
     if (nodesCount > 1 && connectionCount + 1 < nodesCount) {
       setAlertsState({
@@ -137,6 +135,7 @@ function FlowSheet() {
       localStorage.getItem("flowsheet_nodes_data")
     );
     setNodesData(new Map(localStorageNodesData));
+    setSelectedNodes(new Map());
     if (localStorageNodes && localStorageEdges) {
       buildFromNodesAndEdges(localStorageNodes, localStorageEdges);
     }
