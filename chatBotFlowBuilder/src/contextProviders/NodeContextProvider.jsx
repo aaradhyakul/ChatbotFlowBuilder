@@ -6,6 +6,7 @@ const NodeContextProvider = ({ children }) => {
   const [selectedNodes, setSelectedNodes] = useState(new Map());
   const [nodesData, setNodesData] = useState(new Map());
   const [tempData, setTempData] = useState(new Map());
+  const [nodesCount, setNodesCount] = useState(0);
 
   return (
     <NodeContext.Provider
@@ -16,6 +17,8 @@ const NodeContextProvider = ({ children }) => {
         setNodesData,
         tempData,
         setTempData,
+        setNodesCount,
+        nodesCount,
       }}
     >
       {children}

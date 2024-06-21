@@ -15,10 +15,20 @@ const nodeUnselectedStyle = "border-2 border-black";
 const nodeSelectedStyle = "border-2 border-black";
 
 function TextNode({ data, id }) {
-  const { selectedNodes, setSelectedNodes, nodesData, tempData } =
-    useContext(NodeContext);
+  const {
+    selectedNodes,
+    setSelectedNodes,
+    nodesData,
+    tempData,
+    setNodesCount,
+  } = useContext(NodeContext);
   const [overlayCSS, setOverlayCSS] = useState("invisible");
-  const [overlayPosCSS, setOverlayPosCSS] = useState("invisible");
+  useEffect(() => {
+    setNodesCount((cnt) => cnt + 1);
+    return () => {
+      setNodesCount((cnt) => cnt - 1);
+    };
+  }, []);
   useEffect(() => {
     if (selectedNodes.has(id)) {
       setOverlayCSS("");
@@ -31,17 +41,6 @@ function TextNode({ data, id }) {
   }, [nodesData]);
 
   const nodeClickHandler = () => {
-    // if (selectedNodes.has(id)) {
-    //   setSelectedNodes((nds) => {
-    //     nds.delete(id);
-    //     return new Map(nds);
-    //   });
-    // } else {
-    //   setSelectedNodes((nds) => {
-    //     nds.set(id, "customTextNode");
-    //     return new Map(nds);
-    //   });
-    // }
     if (!selectedNodes.has(id)) {
       setSelectedNodes((nds) => {
         nds.set(id, "customTextNode");

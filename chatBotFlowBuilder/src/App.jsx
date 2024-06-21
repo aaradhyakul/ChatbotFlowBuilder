@@ -5,15 +5,20 @@ import "./App.css";
 import FlowSheet from "@components/FlowSheet";
 import SidePanel from "@components/SidePanel";
 import NodeContextProvider from "@/contextProviders/NodeContextProvider";
+import AlertsContextProvider from "@/contextProviders/AlertsContextProvider";
+import Alerts from "@/components/Alerts";
 
 function App() {
   return (
     <div className="flex  h-screen overflow-hidden">
       <NodeContextProvider>
-        <ReactFlowProvider>
-          <FlowSheet />
-          <SidePanel />
-        </ReactFlowProvider>
+        <AlertsContextProvider>
+          <ReactFlowProvider>
+            <Alerts />
+            <FlowSheet />
+            <SidePanel />
+          </ReactFlowProvider>
+        </AlertsContextProvider>
       </NodeContextProvider>
     </div>
   );

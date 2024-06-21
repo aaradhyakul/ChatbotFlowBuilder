@@ -17,31 +17,10 @@ import ReactFlow, {
 } from "reactflow";
 import useStore from "@/stores/store";
 import TextNode from "@/customNodes/TextNode";
-import UnidirectionalEdge from "../customEdges/UnidirectionalEdge";
-import { NodeContext } from "../contextProviders/NodeContextProvider";
-// import "@/customNodes/textNode.css";
+import UnidirectionalEdge from "@/customEdges/UnidirectionalEdge";
+import { NodeContext } from "@/contextProviders/NodeContextProvider";
+import { AlertsContext } from "@/contextProviders/AlertsContextProvider";
 
-// const initialNodes = [
-//   {
-//     id: "provider-1",
-//     type: "input",
-//     data: { label: "Node 1" },
-//     position: { x: 250, y: 5 },
-//   },
-//   { id: "provider-2", data: { label: "Node 2" }, position: { x: 100, y: 100 } },
-//   { id: "provider-3", data: { label: "Node 3" }, position: { x: 400, y: 100 } },
-//   { id: "provider-4", data: { label: "Node 4" }, position: { x: 400, y: 200 } },
-// ];
-
-// const initialEdges = [
-//   {
-//     id: "provider-e1-2",
-//     source: "provider-1",
-//     target: "provider-2",
-//     animated: true,
-//   },
-//   { id: "provider-e1-3", source: "provider-1", target: "provider-3" },
-// ];
 const storeSelector = (store) => ({
   nodes: store.nodes,
   edges: store.edges,
@@ -51,6 +30,7 @@ const storeSelector = (store) => ({
   setNodes: store.setNodes,
   setEdges: store.setEdges,
   buildFromNodesAndEdges: store.buildFromNodesAndEdges,
+  sourceHandles: store.sourceHandles,
 });
 const id_map = new Map();
 const getId = (nodeType) => {
@@ -73,7 +53,11 @@ function FlowSheet() {
     onConnect,
     setNodes,
     buildFromNodesAndEdges,
+    sourceHandles,
   } = useStore(storeSelector);
+
+  const { setAlertsState } = useContext(AlertsContext);
+  const { nodesData, setNodesData, nodesCount } = useContext(NodeContext);
   const addNode = (node) => {
     setNodes([...nodes, node]);
   };
@@ -114,6 +98,22 @@ function FlowSheet() {
     addNode(newNode);
   };
   const saveFlowHandler = () => {
+    let connectionCount = 0;
+    console.log(sourceHandles);
+    for (let [key, cnt] of sourceHandles) {
+      connectionCount += cnt;
+    }
+    console.log("CONNECTIONS:", connectionCount);
+    console.log("NODES:", nodesCount);
+
+    if (nodesCount > 1 && connectionCount + 1 < nodesCount) {
+      setAlertsState({
+        duration: 2000,
+        message: "More than one node with unconnected Source",
+        css: "text-[#000000]  shadow-md text-[#CE2029]",
+      });
+      return;
+    }
     localStorage.setItem("flowsheet_nodes", JSON.stringify(nodes));
     localStorage.setItem("flowsheet_edges", JSON.stringify(edges));
     localStorage.setItem(
@@ -136,7 +136,6 @@ function FlowSheet() {
       buildFromNodesAndEdges(localStorageNodes, localStorageEdges);
     }
   };
-  const { nodesData, setNodesData } = useContext(NodeContext);
   const [notificationCSS, setNotificationCSS] = useState("-translate-y-[110%]");
   const [notificationText, setNotificationText] = useState(
     "Saved to LocalStorage"
