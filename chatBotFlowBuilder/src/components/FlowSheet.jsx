@@ -69,9 +69,9 @@ function FlowSheet() {
     const localStorageEdges = JSON.parse(
       localStorage.getItem("flowsheet_edges")
     );
-    if (localStorageNodes && localStorageEdges) {
-      buildFromNodesAndEdges(localStorageNodes, localStorageEdges);
-    }
+    // if (localStorageNodes && localStorageEdges) {
+    //   buildFromNodesAndEdges(localStorageNodes, localStorageEdges);
+    // }
   }, []);
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, setNodes } =
     useStore(
@@ -117,33 +117,12 @@ function FlowSheet() {
     };
     addNode(newNode);
   };
-  const saveFlowHandler = () => {
-    localStorage.setItem("flowsheet_nodes", JSON.stringify(nodes));
-    localStorage.setItem("flowsheet_edges", JSON.stringify(edges));
-    localStorage.setItem("hello", { hello: "hit" });
-    console.log("hello");
-  };
-  const [notificationCSS, setNotificationCSS] = useState("-translate-y-[110%]");
-  const [notificationText, setNotificationText] = useState(
-    "Saved to LocalStorage"
-  );
   return (
     <>
-      <button
-        className=" fixed top-[15px] left-[20px] bg-[#77DD77] py-1 px-2  rounded-sm font-semibold"
-        onClick={saveFlowHandler}
-      >
-        Save Flow
-      </button>
       <div
-        className="flowsheet-wrapper relative w-screen h-screen"
+        className="flowsheet-wrapper relative w-full"
         ref={flowSheetWrapperRef}
       >
-        <div
-          className={`${notificationCSS} h-[50px] w-[100px] left-1/2 -translate-x-1/2 absolute bg-[#343434]`}
-        >
-          {notificationText}
-        </div>
         <ReactFlow
           nodes={nodes}
           nodeTypes={nodeTypes}
