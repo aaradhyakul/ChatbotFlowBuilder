@@ -48,8 +48,6 @@ const connectionHandler = (connection, set, get) => {
     id: `${connection.source}|${connection.target}`,
     markerEnd: { type: MarkerType.ArrowClosed },
   };
-  // console.log(connection);
-  // console.log(connection.source, targetId);
   const edgeId = `${sourceId}|${targetId}`;
   const sourceHandles = get().sourceHandles;
   const targetHandles = get().targetHandles;
@@ -63,9 +61,6 @@ const connectionHandler = (connection, set, get) => {
     edgeHandleMap: new Map(edgeHandleMap),
     edges: addEdge(edge, get().edges),
   });
-  console.log("SourceHandle: ", sourceHandles);
-  console.log("TargetHandle: ", targetHandles);
-  console.log("EdgeHandleMap: ", edgeHandleMap);
 };
 
 const store = (set, get) => ({
@@ -77,11 +72,9 @@ const store = (set, get) => ({
 
   onNodesChange: (changes) => {
     set({ nodes: applyNodeChanges(changes, get().nodes) });
-    // console.log("onNodesChange: ", changes);
   },
   onEdgesChange: (changes) => {
     edgesChangeHandler(changes, set, get);
-    // console.log("onEdgesChange", changes);
   },
   onConnect: (connection) => {
     connectionHandler(connection, set, get);
@@ -117,7 +110,6 @@ const store = (set, get) => ({
         (tempTargetHandlesMap.get(target) || 0) + 1
       );
     }
-    console.log("TempSourceHandles: ", tempSourceHandlesMap);
     set({
       nodes: nodes,
       edges: edges,

@@ -110,10 +110,15 @@ function FlowSheet() {
       setAlertsState({
         duration: 2000,
         message: "More than one node with unconnected Source",
-        css: "text-[#000000]  shadow-md text-[#CE2029]",
+        css: " shadow-md text-[#CE2029] border-2 border-[#CE2029]",
       });
       return;
     }
+    setAlertsState({
+      duration: 2000,
+      message: "Saved flow to LocalStorage",
+      css: "shadow-md text-[#32CD32] border-2 border-[#32CD32]",
+    });
     localStorage.setItem("flowsheet_nodes", JSON.stringify(nodes));
     localStorage.setItem("flowsheet_edges", JSON.stringify(edges));
     localStorage.setItem(

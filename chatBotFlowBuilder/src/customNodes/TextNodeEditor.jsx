@@ -16,11 +16,9 @@ const TextNodeEditor = ({ node_id, pos }) => {
   }, [pos]);
   const textInputHandler = (e) => {
     setNodesData((nds) => {
-      // console.log("set called");
       nds.set(node_id, { text: e.target.value });
       return new Map(nds);
     });
-    // console.log("tempData", tempData);
   };
   const cancelChangesHandler = () => {
     nodesData.set(node_id, { text: tempData.get(node_id)?.text });

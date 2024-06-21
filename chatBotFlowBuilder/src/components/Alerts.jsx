@@ -5,7 +5,6 @@ const Alerts = () => {
   const { alertsState } = useContext(AlertsContext);
   useEffect(() => {
     const { css, message, duration } = alertsState;
-    console.log(alertsState);
     if (duration) {
       setAlertCSS(`translate-x-[calc(100%+10px)] ${css}`);
       setTimeout(() => {
