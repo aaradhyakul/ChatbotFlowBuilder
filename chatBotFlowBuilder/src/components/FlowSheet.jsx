@@ -58,26 +58,20 @@ const getId = (nodeType) => {
   const id_no = id_map.get(nodeType);
   const id = `${nodeType}_${id_no}`;
   id_map.set(nodeType, id_no + 1);
-  return id;
+  return `${nodeType}_${Math.floor(Math.random() * 1000000)}`;
+  // return id;
 };
 
 function FlowSheet() {
-  useEffect(() => {
-    const localStorageNodes = JSON.parse(
-      localStorage.getItem("flowsheet_nodes")
-    );
-    const localStorageEdges = JSON.parse(
-      localStorage.getItem("flowsheet_edges")
-    );
-    // if (localStorageNodes && localStorageEdges) {
-    //   buildFromNodesAndEdges(localStorageNodes, localStorageEdges);
-    // }
-  }, []);
-  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, setNodes } =
-    useStore(
-      storeSelector
-      // useShallow(storeSelector)
-    );
+  const {
+    nodes,
+    edges,
+    onNodesChange,
+    onEdgesChange,
+    onConnect,
+    setNodes,
+    buildFromNodesAndEdges,
+  } = useStore(storeSelector);
   const addNode = (node) => {
     setNodes([...nodes, node]);
   };
@@ -117,30 +111,67 @@ function FlowSheet() {
     };
     addNode(newNode);
   };
+  const saveFlowHandler = () => {
+    localStorage.setItem("flowsheet_nodes", JSON.stringify(nodes));
+    localStorage.setItem("flowsheet_edges", JSON.stringify(edges));
+    localStorage.setItem("hello", { hello: "hit" });
+    console.log("hello");
+  };
+  const loadFlowHandler = () => {
+    const localStorageNodes = JSON.parse(
+      localStorage.getItem("flowsheet_nodes")
+    );
+    const localStorageEdges = JSON.parse(
+      localStorage.getItem("flowsheet_edges")
+    );
+    if (localStorageNodes && localStorageEdges) {
+      buildFromNodesAndEdges(localStorageNodes, localStorageEdges);
+    }
+  };
+  const [notificationCSS, setNotificationCSS] = useState("-translate-y-[110%]");
+  const [notificationText, setNotificationText] = useState(
+    "Saved to LocalStorage"
+  );
   return (
-    <>
-      <div
-        className="flowsheet-wrapper relative w-full"
-        ref={flowSheetWrapperRef}
-      >
-        <ReactFlow
-          nodes={nodes}
-          nodeTypes={nodeTypes}
-          edgeTypes={edgeTypes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          onLoad={onLoad}
-          onDragOver={onDragOver}
-          onDrop={onDrop}
-          fitView
+    <div className="h-screen flex flex-1 flex-col">
+      <div className="h-[40px] flex items-center gap-2 flex-initial bg-[#FBFBF9] shadow-sm px-2">
+        <button
+          className="bg-[#4CCD99] font-semibold py-1 px-2 rounded-[3px]"
+          onClick={saveFlowHandler}
         >
-          <Controls />
-          <MiniMap nodeStrokeWidth={3} />
-        </ReactFlow>
+          Save Flow
+        </button>
+        <button
+          className="bg-[#41C9E2] font-semibold py-1 px-2 rounded-[3px]"
+          onClick={loadFlowHandler}
+        >
+          Load Flow
+        </button>
       </div>
-    </>
+      <div className="flex-auto">
+        <div
+          className="flowsheet-wrapper relative w-full h-full "
+          ref={flowSheetWrapperRef}
+        >
+          <ReactFlow
+            nodes={nodes}
+            nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            onLoad={onLoad}
+            onDragOver={onDragOver}
+            onDrop={onDrop}
+            fitView
+          >
+            <Controls />
+            <MiniMap nodeStrokeWidth={3} />
+          </ReactFlow>
+        </div>
+      </div>
+    </div>
   );
 }
 

@@ -69,10 +69,8 @@ const connectionHandler = (connection, set, get) => {
 };
 
 const store = (set, get) => ({
-  nodes: initialNodes,
-  edges: initialEdges,
-  nodeTypes: {},
-  edgeTypes: {},
+  nodes: [],
+  edges: [],
   edgeHandleMap: new Map(), // edge_id-->{handle_id1, handle_id2} | updated by onConnect handler & setEdges
   sourceHandles: new Map(), // handle_id-->connectionCount
   targetHandles: new Map(), // handle_id-->connectionCount
@@ -113,27 +111,22 @@ const store = (set, get) => ({
       tempEdgeHandleMap.set(id, [source, target]);
       tempSourceHandlesMap.set(
         source,
-        (tempSourceHandlesMap.get(source) || 1) + 1
+        (tempSourceHandlesMap.get(source) || 0) + 1
       );
       tempTargetHandlesMap.set(
         target,
-        (tempTargetHandlesMap.get(target) || 1) + 1
+        (tempTargetHandlesMap.get(target) || 0) + 1
       );
     }
+    console.log("TempSourceHandles: ", tempSourceHandlesMap);
     set({
-      nodes,
-      edges,
+      nodes: nodes,
+      edges: edges,
       edgeHandleMap: tempEdgeHandleMap,
       sourceHandles: tempSourceHandlesMap,
       targetHandles: tempTargetHandlesMap,
     });
   },
-  // removeEdge: (edge_id) => {
-  //   set({ ...edges.filter((edge) => edge.id !== edge_id) });
-  //   const {handleId1, handleId2} = edges.get(edge_id);
-
-  //   edgeHandleMap.delete(edge_id);
-  // },
 });
 
 export default create(store);
